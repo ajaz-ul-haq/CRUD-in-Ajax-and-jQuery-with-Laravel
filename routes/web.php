@@ -21,3 +21,4 @@ Route::post('/add-student',[userController::class,'store']);
 Route::get('/edit-student/{id?}',[userController::class,'editor']);
 Route::post('/edit-student',[userController::class,'edit_student']);
 Route::get('/delete-student/{id?}',[userController::class,'delete']);
+Route::get('/search-students/{query?}',[userController::class,'search']);

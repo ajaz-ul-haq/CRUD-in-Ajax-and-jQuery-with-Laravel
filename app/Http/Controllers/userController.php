@@ -101,4 +101,26 @@ class userController extends Controller
             ]);
         }
     }
+
+    public function search($query=''){
+        $data = Student::where('email', 'LIKE', '%'. $query. '%')
+            ->orwhere('name', 'LIKE', '%'. $query. '%')
+            ->orwhere('phone', 'LIKE', '%'. $query. '%')
+            ->get();
+        $count = count($data);
+        if($count>0){
+            return response()->json([
+                'status'=>1,
+                'count'=> $count,
+                'data'=>$data,
+            ]);
+        }
+        else{
+            return response()->json([
+                'status'=>0,
+                'count'=> $count,
+            ]);
+        }
+
+    }
 }

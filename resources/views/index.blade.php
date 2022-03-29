@@ -114,8 +114,20 @@
             </div>
             <div class="card">
                 <div class="card-header">
-                    <h4>Students List
-                        <a href="" class="btn btn-primary btn-sm  float-end" data-bs-toggle="modal" data-bs-target="#addStudentModal">Add New</a>
+                    <h4>
+                        <div class="row">
+                            <div class="col-md-7">
+                                Students List
+                            </div>
+                            <div class="row col-md-5">
+                                <div class="col-md-9">
+                                    <input class="search-bar form-control" name="search-bar" placeholder="Search Here"/>
+                                </div>
+                                <div class="col-md-3">
+                                    <a href="" class="btn btn-primary btn-md  float-end" data-bs-toggle="modal" data-bs-target="#addStudentModal">Add New</a>
+                                </div>
+                            </div>
+                        </div>
                     </h4>
                 </div>
                 <div class="card-body">
@@ -134,6 +146,7 @@
 
                         </tbody>
                     </table>
+                    <div class="no-record-found"></div>
                 </div>
             </div>
         </div>
@@ -174,6 +187,16 @@
                 }
             });
         }
+
+        // Remove Errors when User inputs
+
+        $(document).on('mouseover','input',function(){
+            $('.success').html('');
+            $('.success').removeClass('alert alert-success');
+
+            $('.errors').html('');
+            $('.errors').removeClass('alert alert-danger');
+        });
 
 
     // Add Students and show all Students
@@ -222,8 +245,42 @@
             });
         });
 
-// Show Edit Student Modal
+        // Search User
+        $(document).on('keyup','.search-bar',function(){
+            let query = $('.search-bar').val();
+            $.ajax({
+                url: "/search-students/"+query,
+                method:'get',
+                dataType: 'JSON',
+                success: function(response) {
 
+                    $('.no-record-found').html('');
+                    if(response.count!=0){
+                        $('#addStudentModal').modal('hide');
+                        $('tbody').html('');
+                        $.each(response.data, function(key,item){
+                            $('tbody').append(
+                                '<tr>\
+                                 <td>'+item.id+'</td>\
+                             <td>'+item.name+'</td>\
+                             <td>'+item.email+'</td>\
+                             <td>'+item.phone+'</td>\
+                             <td>'+item.created_at+'</td>\
+                             <td><button class="btn btn-edit btn-sm btn-primary" id="'+item.id+'">Edit</button>\
+                                 <button class="btn del-btn btn-sm btn-danger"   id="'+item.id+'">Delete</button</td>\
+                             </tr>');
+                        });
+                    }
+                    else{
+                        $('tbody').html('');
+                        $('.no-record-found').append('<em><h6 class="text-center">No Record Found...</h6></em>');
+                    }
+                }
+            });
+        });
+
+
+// Show Edit Student Modal
         $(document).on('click','.btn-edit',function(){
             let student_id = this.id;
 
@@ -269,7 +326,7 @@
                         $('.errors').append('Form Validation failed<br>');
                     } else {
                         $('.success').addClass('alert alert-success');
-                        $('.success').append('User Added Successfully!!');
+                        $('.success').append('User Updated Successfully!!');
                         $('#editStudentModal').modal('hide');
                         getStudents();
                     }
