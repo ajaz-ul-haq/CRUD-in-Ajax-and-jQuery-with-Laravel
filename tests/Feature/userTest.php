@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\Models\Student;
+use Database\Factories\UserFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -21,32 +23,24 @@ class userTest extends TestCase
     }
     public function test_user_can_be_added()
     {
-        $this->post('/add-student',[
-            'name'=>'AjazUlHaq',
-            'email'=>'demo@email.com',
-            'phone'=>'9055713253'
-        ]);
-
-        $this->assertDatabaseHas('students',[
-            'name'=>'AjazUlHaq',
-            'email'=>'demo@email.com',
-            'phone'=>'9055713253'
-        ]);
+        $student = Student::factory()->create();
+        $this->post('/add-student',$student->toArray());
+        $this->assertDatabaseHas('students',$student->toArray());
     }
 
     public function test_user_can_be_edited()
     {
-        $this->post('/edit-student',[
-            'edit_id'=>1,
-            'edit_name'=>'Mehran',
-            'edit_email'=>'demo@email.com',
-            'edit_phone'=>'9055713253'
-        ]);
+        $student = Student::factory()->create();
+        $student['email'] == "demo";
+        $this->post('/edit-student',$student->toArray());
 
-        $this->assertDatabaseHas('students',[
-            'name'=>'Mehran',
-            'email'=>'demo@email.com',
-            'phone'=>'9055713253'
-        ]);
+        $this->assertDatabaseHas('students',$student->toArray());
+    }
+    public function test_user_can_be_deleted()
+    {
+        $student = Student::factory()->create();
+        $this->get('/delete-student/'.$student['id'],$student->toArray());
+
+        $this->assertDatabaseMissing('students',$student->toArray());
     }
 }

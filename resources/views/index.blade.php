@@ -10,6 +10,7 @@
 </head>
 <body style="padding-top: 40px">
 
+{{-- Add Student Modal--}}
 <div class="modal fade" id="addStudentModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -41,7 +42,9 @@
         </div>
     </div>
 </div>
+{{-- end of Add Student Modal--}}
 
+{{-- Delete Student Modal--}}
 <div class="modal fade" id="deleteStudentModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -60,8 +63,10 @@
         </div>
     </div>
 </div>
+{{-- end of Delete Student Modal--}}
 
 
+{{-- Edit Student Modal--}}
 <div class="modal fade" id="editStudentModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -94,6 +99,7 @@
         </div>
     </div>
 </div>
+{{-- end of Edit Student Modal--}}
 
 
 
@@ -136,6 +142,9 @@
 <script>
 
     $(document).ready(function (){
+
+        // show all Students
+
         getStudents();
         function getStudents(){
             $('tbody').html('');
@@ -162,10 +171,9 @@
         }
 
 
+    // Add Students and show all Students
 
-
-        $(document).on('click','.add-student',function(event){
-            event.preventDefault();
+        $(document).on('click','.add-student',function(){
 
             let data = {
                 'name': $(".name").val(),
@@ -210,10 +218,9 @@
             });
         });
 
+// Show Edit Student Modal
 
-
-        $(document).on('click','.btn-edit',function(event){
-            event.preventDefault();
+        $(document).on('click','.btn-edit',function(){
             let student_id = this.id;
 
             $('#editStudentModal').modal('show');
@@ -231,10 +238,9 @@
             });
         });
 
+// Edit Student in database and show all students
 
-
-        $(document).on('click','.edit-student',function(event) {
-            event.preventDefault();
+        $(document).on('click','.edit-student',function() {
             let data = {
                 'edit_id': $('.edit_id').val(),
                 'edit_name': $('.edit_name').val(),
@@ -257,6 +263,7 @@
                     if (response.status == 400) {
                         $('.errors').addClass('alert alert-danger');
                         $('.errors').append('Form Validation failed<br>');
+                        $('.errors').delay(2000).fadeOut();
                     } else {
                         $('.success').addClass('alert alert-success');
                         $('.success').append('User Added Successfully!!');
@@ -268,16 +275,19 @@
             });
         });
 
-        $(document).on('click','.del-btn', function(event) {
-            event.preventDefault();
+
+        // open delete student modal
+
+        $(document).on('click','.del-btn', function() {
 
             let student_id = this.id;
             $('#deleteStudentModal').modal('show');
             $('.student_id').val(student_id);
         });
 
-        $(document).on('click','.delete-student', function(event){
-            event.preventDefault();
+        // delete student from Database
+
+        $(document).on('click','.delete-student', function(){
             let student_id = $('.student_id').val();
             $.ajax({
                 url: "/delete-student/"+student_id,
@@ -298,6 +308,7 @@
             });
         });
     });
+
 </script>
 </body>
 </html>
