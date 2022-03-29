@@ -7,4 +7,4 @@ A Basic CRUD system in Laravel, using Ajax And jQuery
 - Delete a User
 
 
-CBy : <b><em>Ajaz Ul Haq</em></b>
+By : <b><em>Ajaz Ul Haq</em></b>
